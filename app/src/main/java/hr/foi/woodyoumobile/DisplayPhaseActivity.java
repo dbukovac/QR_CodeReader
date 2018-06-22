@@ -18,10 +18,8 @@ import java.util.ArrayList;
 
 public class DisplayPhaseActivity extends AppCompatActivity {
 
-    private TextView phaseIdTextView;
     private TextView phaseNameTextView;
-    private TextView projectIdTextView;
-    private TextView phaseProjectIdTextView;
+    private TextView projectNameTextView;
     private Integer phaseProjectId = -1;
 
     @Override
@@ -33,10 +31,8 @@ public class DisplayPhaseActivity extends AppCompatActivity {
         Bundle extras = intent.getExtras();
         Integer phaseId = Integer.parseInt(extras.getString("PHASE_ID"));
         Integer projectId = Integer.parseInt(extras.getString("PROJECT_ID"));
-        phaseIdTextView = findViewById(R.id.phaseIdTextView);
         phaseNameTextView = findViewById(R.id.phaseNameTextView);
-        projectIdTextView = findViewById(R.id.projectIdTextView);
-        phaseProjectIdTextView = findViewById(R.id.phaseProjectIdTextView);
+        projectNameTextView = findViewById(R.id.projectNameTextView);
         new GetPhaseTask().execute(projectId, phaseId);
     }
 
@@ -55,6 +51,7 @@ public class DisplayPhaseActivity extends AppCompatActivity {
                     phase.setPhaseProjectId(resultSet.getInt("id"));
                     phaseProjectId = resultSet.getInt("id");
                     phase.setProjectId(resultSet.getInt("projektId"));
+                    phase.setProjectName(resultSet.getString("nazivProjekta"));
                     phase.setName(resultSet.getString("naziv"));
                     phase.setPhaseId(resultSet.getInt("fazaId"));
                 }
@@ -70,10 +67,8 @@ public class DisplayPhaseActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(final Phase phase) {
             if(phase != null) {
-                phaseIdTextView.setText(((Integer) phase.getPhaseId()).toString());
-                projectIdTextView.setText(((Integer) phase.getProjectId()).toString());
-                phaseProjectIdTextView.setText(((Integer) phase.getPhaseProjectId()).toString());
-                phaseNameTextView.setText(phase.getName());
+                projectNameTextView.append(" "+phase.getProjectName());
+                phaseNameTextView.append(" "+phase.getName());
             }
             else {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DisplayPhaseActivity.this)

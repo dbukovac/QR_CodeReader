@@ -4,7 +4,7 @@ public class Project {
 
     private int projectId;
     private String name;
-    private int partnerId;
+    private String partnerName;
 
     public Project() {
     }
@@ -25,11 +25,11 @@ public class Project {
         return name;
     }
 
-    public void setPartnerId(int partnerId) {
-        this.partnerId = partnerId;
+    public void setPartnerName(String partnerName) {
+        this.partnerName = partnerName;
     }
 
-    public int getPartnerId() {
-        return partnerId;
+    public String getPartnerName() {
+        return partnerName;
     }
 }

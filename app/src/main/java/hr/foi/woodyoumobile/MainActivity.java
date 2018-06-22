@@ -54,14 +54,14 @@ public class MainActivity extends AppCompatActivity {
 
             try
             {
-                ResultSet resultSet =  DbConnection.getInstance().executeQuery("SELECT * FROM Projekt WHERE (aktivan = 1) AND (gotovo = 0);");
+                ResultSet resultSet =  DbConnection.getInstance().executeQuery("SELECT * FROM ProjektView;");
 
                 while (resultSet.next())
                 {
                     Project project = new Project();
                     project.setProjectId(resultSet.getInt("projektId"));
                     project.setName(resultSet.getString("ime"));
-                    project.setPartnerId(resultSet.getInt("partnerId"));
+                    project.setPartnerName(resultSet.getString("imePartner"));
 
                     projects.add(project);
                 }
@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
             for(final Project project: projects) {
                 View projectsView = LayoutInflater.from(MainActivity.this).inflate(R.layout.project_view, null);
                 TextView projectTextView = projectsView.findViewById(R.id.projectTextView);
-                projectTextView.setText("Project ID: "+project.getProjectId()+"\nProject name: "+project.getName());
+                projectTextView.setText(getResources().getString(R.string.projectName)+" "+project.getName()+"\n"+getResources().getString(R.string.partnerName)+" "+project.getPartnerName());
 
                 Button phasesButton = projectsView.findViewById(R.id.phasesButton);
 
