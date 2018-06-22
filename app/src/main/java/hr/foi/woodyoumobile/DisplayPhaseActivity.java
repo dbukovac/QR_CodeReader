@@ -21,6 +21,7 @@ public class DisplayPhaseActivity extends AppCompatActivity {
     private TextView phaseIdTextView;
     private TextView phaseNameTextView;
     private TextView projectIdTextView;
+    private TextView phaseProjectIdTextView;
     private Integer phaseProjectId = -1;
 
     @Override
@@ -35,6 +36,7 @@ public class DisplayPhaseActivity extends AppCompatActivity {
         phaseIdTextView = findViewById(R.id.phaseIdTextView);
         phaseNameTextView = findViewById(R.id.phaseNameTextView);
         projectIdTextView = findViewById(R.id.projectIdTextView);
+        phaseProjectIdTextView = findViewById(R.id.phaseProjectIdTextView);
         new GetPhaseTask().execute(projectId, phaseId);
     }
 
@@ -70,6 +72,7 @@ public class DisplayPhaseActivity extends AppCompatActivity {
             if(phase != null) {
                 phaseIdTextView.setText(((Integer) phase.getPhaseId()).toString());
                 projectIdTextView.setText(((Integer) phase.getProjectId()).toString());
+                phaseProjectIdTextView.setText(((Integer) phase.getPhaseProjectId()).toString());
                 phaseNameTextView.setText(phase.getName());
             }
             else {
@@ -89,6 +92,32 @@ public class DisplayPhaseActivity extends AppCompatActivity {
 
     public void closePhaseButtonClick(View view) {
         if(phaseProjectId != -1) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DisplayPhaseActivity.this)
+                    .setTitle("Upozorenje!")
+                    .setMessage("Želite li zaključati fazu projekta? (Ovo se ne može poništiti!)")
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Thread thread = new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    DbConnection.getInstance().openConnection();
+                                    DbConnection.getInstance().executeUpdate("UPDATE Faze_projekta SET zakljucano = 1 WHERE id = "+phaseProjectId+";");
+                                    DbConnection.getInstance().closeConnection();
+                                }
+                            });
+                            thread.start();
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("Odustani", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                        }
+                    });
+
+            alertDialogBuilder.show();
 
         }
     }
