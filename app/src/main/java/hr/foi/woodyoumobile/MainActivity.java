@@ -1,20 +1,23 @@
 package hr.foi.woodyoumobile;
 
+import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutCompat;
-import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -71,22 +74,29 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(ArrayList<Project> projects)
         {
             LinearLayout linearLayout = findViewById(R.id.projectLinearLayout);
-            for(Project project: projects) {
-                TextView projectTextView = new TextView(MainActivity.this);
+            for(final Project project: projects) {
+                View projectsView = LayoutInflater.from(MainActivity.this).inflate(R.layout.project_view, null);
+                TextView projectTextView = projectsView.findViewById(R.id.projectTextView);
                 projectTextView.setText("Project ID: "+project.getProjectId()+"\nProject name: "+project.getName());
-                projectTextView.setId(project.getProjectId());
-                projectTextView.setLayoutParams(new LinearLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                ));
-                ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) projectTextView.getLayoutParams();
 
-                marginLayoutParams.bottomMargin=30;
-                marginLayoutParams.leftMargin=30;
-                marginLayoutParams.topMargin=30;
+                Button phasesButton = projectsView.findViewById(R.id.phasesButton);
 
-                projectTextView.setTextSize(21);
-                linearLayout.addView(projectTextView);
+                phasesButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this)
+                                .setTitle("Hello World!")
+                                .setMessage("Stisnuli ste ID: "+project.getProjectId())
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.cancel();
+                                    }
+                                });
+                        AlertDialog alertDialog = alertDialogBuilder.show();
+                    }
+                });
+                linearLayout.addView(projectsView);
             }
         }
     }

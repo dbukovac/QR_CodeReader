@@ -1,4 +1,5 @@
 <resources>
-    <string name="app_name">WoodYouMobile</string>
+    <string name="app_name">WoodYou Mobile</string>
     <string name="projectTextView" />
+    <string name="phasesButton">Faze</string>
 </resources>
