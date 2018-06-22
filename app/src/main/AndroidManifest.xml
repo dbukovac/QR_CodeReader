@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".DisplayPhasesActivity"
+            android:name=".DisplayPhaseActivity"
             android:parentActivityName=".MainActivity">
         </activity>
     </application>

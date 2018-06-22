@@ -3,11 +3,13 @@ package hr.foi.woodyoumobile;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +24,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import static android.telephony.MbmsDownloadSession.RESULT_CANCELLED;
+
 public class MainActivity extends AppCompatActivity {
+
+    public Integer projectId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,13 +92,36 @@ public class MainActivity extends AppCompatActivity {
                 phasesButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
-                        Intent intent = new Intent(MainActivity.this, DisplayPhasesActivity.class);
-                        intent.putExtra("PROJECT_ID", ((Integer) project.getProjectId()).toString());
-                        startActivity(intent);
+                        try {
+                            projectId = project.getProjectId();
+                            Intent intent = new Intent("com.google.zxing.client.android.SCAN");
+                            intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
+                            startActivityForResult(intent, 0);
+                        } catch (Exception e) {
+                            Uri marketUri = Uri.parse("market://details?id=com.google.zxing.client.android");
+                            Intent marketIntent = new Intent(Intent.ACTION_VIEW, marketUri);
+                            startActivity(marketIntent);
+                        }
                     }
                 });
                 linearLayout.addView(projectsView);
+            }
+        }
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0) {
+            if (resultCode == RESULT_OK) {
+                String result = data.getStringExtra("SCAN_RESULT");
+                Log.w("QR_CODE", result);
+                Intent intent = new Intent(MainActivity.this, DisplayPhaseActivity.class);
+                intent.putExtra("PHASE_ID", result);
+                intent.putExtra("PROJECT_ID", projectId.toString());
+                startActivity(intent);
+            }
+            if(resultCode == RESULT_CANCELLED){
+
             }
         }
     }
