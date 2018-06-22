@@ -1,7 +1,10 @@
 package hr.foi.woodyoumobile;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.media.ExifInterface;
 import android.os.AsyncTask;
+import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -47,8 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
             try
             {
-                Statement statement = dbConnection.connection.createStatement();
-                ResultSet resultSet =  statement.executeQuery("SELECT * FROM Projekt WHERE (aktivan = 1) AND (gotovo = 0);");
+                ResultSet resultSet =  dbConnection.executeQuery("SELECT * FROM Projekt WHERE (aktivan = 1) AND (gotovo = 0);");
 
                 while (resultSet.next())
                 {
@@ -84,16 +86,10 @@ public class MainActivity extends AppCompatActivity {
                 phasesButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this)
-                                .setTitle("Hello World!")
-                                .setMessage("Stisnuli ste ID: "+project.getProjectId())
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.cancel();
-                                    }
-                                });
-                        AlertDialog alertDialog = alertDialogBuilder.show();
+
+                        Intent intent = new Intent(MainActivity.this, DisplayPhasesActivity.class);
+                        intent.putExtra("PROJECT_ID", ((Integer) project.getProjectId()).toString());
+                        startActivity(intent);
                     }
                 });
                 linearLayout.addView(projectsView);
