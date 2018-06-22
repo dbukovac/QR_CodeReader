@@ -21,6 +21,7 @@ public class DisplayPhaseActivity extends AppCompatActivity {
     private TextView phaseIdTextView;
     private TextView phaseNameTextView;
     private TextView projectIdTextView;
+    private Integer phaseProjectId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,8 @@ public class DisplayPhaseActivity extends AppCompatActivity {
 
                 if (resultSet.next()) {
                     phase = new Phase();
+                    phase.setPhaseProjectId(resultSet.getInt("id"));
+                    phaseProjectId = resultSet.getInt("id");
                     phase.setProjectId(resultSet.getInt("projektId"));
                     phase.setName(resultSet.getString("naziv"));
                     phase.setPhaseId(resultSet.getInt("fazaId"));
@@ -86,6 +89,8 @@ public class DisplayPhaseActivity extends AppCompatActivity {
     }
 
     public void closePhaseButtonClick(View view) {
+        if(phaseProjectId != -1) {
 
+        }
     }
 }
