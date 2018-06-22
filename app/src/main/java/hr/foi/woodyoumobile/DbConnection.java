@@ -8,10 +8,18 @@ import java.sql.Statement;
 
 public class DbConnection {
 
+    private static DbConnection instance;
     private static String connectionString = "jdbc:jtds:sqlserver://31.147.204.119:1433;database=18040_DB;user=18040_User;password=FW3E%bdH;encrypt=true;";
-    public Connection connection = null;
+    private static Connection connection = null;
 
-    public DbConnection()
+    public static synchronized DbConnection getInstance() {
+        if(instance == null) {
+            instance = new DbConnection();
+        }
+        return instance;
+    }
+
+    private DbConnection()
     {
         try {
             Class.forName("net.sourceforge.jtds.jdbc.Driver").newInstance();
@@ -21,7 +29,7 @@ public class DbConnection {
         }
     }
 
-    public void openConnection()
+    public static void openConnection()
     {
         try {
             connection = DriverManager.getConnection(connectionString);
@@ -35,7 +43,7 @@ public class DbConnection {
         }
     }
 
-    public void closeConnection() {
+    public static void closeConnection() {
         if(connection != null)
         {
             try {
@@ -47,23 +55,32 @@ public class DbConnection {
         }
     }
 
-    public ResultSet executeQuery(String queryText)
-    {
+    public static ResultSet executeQuery(String queryText) {
         Statement statement = null;
-        try
-        {
-            if(connection != null && connection.isClosed() == false)
-            {
+        try {
+            if(connection != null && connection.isClosed() == false) {
                 statement = connection.createStatement();
                 return statement.executeQuery(queryText);
             }
         }
-        catch (SQLException e)
-        {
+        catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
 
         return null;
+    }
+
+    public static void executeUpdate(String sqlText) {
+        Statement statement = null;
+        try{
+            if(connection != null && connection.isClosed() == false) {
+                statement = connection.createStatement();
+                statement.executeUpdate(sqlText);
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

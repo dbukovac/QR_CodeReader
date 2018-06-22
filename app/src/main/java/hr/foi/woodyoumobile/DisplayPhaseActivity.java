@@ -41,13 +41,12 @@ public class DisplayPhaseActivity extends AppCompatActivity {
     class GetPhaseTask extends AsyncTask<Integer, Void, Phase> {
         @Override
         protected Phase doInBackground(Integer ... integers) {
-            DbConnection dbConnection = new DbConnection();
+            DbConnection.getInstance().openConnection();
 
-            dbConnection.openConnection();
             Phase phase = null;
 
             try {
-                ResultSet resultSet = dbConnection.executeQuery("SELECT * FROM Faze_projektaView WHERE (projektId = "+integers[0]+") AND (fazaId = "+integers[1]+");");
+                ResultSet resultSet = DbConnection.getInstance().executeQuery("SELECT * FROM Faze_projektaView WHERE (projektId = "+integers[0]+") AND (fazaId = "+integers[1]+");");
 
                 if (resultSet.next()) {
                     phase = new Phase();
@@ -60,7 +59,7 @@ public class DisplayPhaseActivity extends AppCompatActivity {
             } catch (SQLException e) {
                 e.printStackTrace();
             } finally {
-                dbConnection.closeConnection();
+                DbConnection.getInstance().closeConnection();
             }
 
             return phase;

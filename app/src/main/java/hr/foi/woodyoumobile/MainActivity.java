@@ -50,13 +50,11 @@ public class MainActivity extends AppCompatActivity {
         {
             ArrayList<Project> projects = new ArrayList<Project>();
 
-            DbConnection dbConnection = new DbConnection();
-
-            dbConnection.openConnection();
+            DbConnection.getInstance().openConnection();
 
             try
             {
-                ResultSet resultSet =  dbConnection.executeQuery("SELECT * FROM Projekt WHERE (aktivan = 1) AND (gotovo = 0);");
+                ResultSet resultSet =  DbConnection.getInstance().executeQuery("SELECT * FROM Projekt WHERE (aktivan = 1) AND (gotovo = 0);");
 
                 while (resultSet.next())
                 {
@@ -72,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             finally {
-                dbConnection.closeConnection();
+                DbConnection.getInstance().closeConnection();
             }
 
             return projects;
