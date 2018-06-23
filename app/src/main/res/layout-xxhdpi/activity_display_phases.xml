@@ -22,21 +22,21 @@
                 android:id="@+id/projectNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginBottom="1dp"
+                android:layout_marginTop="1dp"
                 android:padding="10dp"
                 android:text="@string/projectName"
-                android:textSize="8pt" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/phaseNameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginBottom="1dp"
+                android:layout_marginTop="1dp"
                 android:padding="10dp"
                 android:text="@string/phaseName"
-                android:textSize="8pt" />
+                android:textSize="18sp" />
 
             <Button
                 android:id="@+id/closePhaseButton"
@@ -45,7 +45,8 @@
                 android:layout_marginBottom="5dp"
                 android:layout_marginTop="5dp"
                 android:onClick="closePhaseButtonClick"
-                android:text="@string/confirmPhaseButton" />
+                android:text="@string/confirmPhaseButton"
+                android:textSize="14sp" />
         </LinearLayout>
     </ScrollView>
 
