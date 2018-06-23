@@ -112,15 +112,40 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
                 String result = data.getStringExtra("SCAN_RESULT");
-                Log.w("QR_CODE", result);
-                Intent intent = new Intent(MainActivity.this, DisplayPhaseActivity.class);
-                intent.putExtra("PHASE_ID", result);
-                intent.putExtra("PROJECT_ID", projectId.toString());
-                startActivity(intent);
+                if(isNumeric(result)) {
+                    Log.w("QR_CODE", result);
+                    Intent intent = new Intent(MainActivity.this, DisplayPhaseActivity.class);
+                    intent.putExtra("PHASE_ID", result);
+                    intent.putExtra("PROJECT_ID", projectId.toString());
+                    startActivity(intent);
+                }
+                else {
+                    AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this)
+                            .setTitle("Greška!")
+                            .setMessage("Nevažeći QR kod!")
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.cancel();
+                                }
+                            });
+                    alertDialogBuilder.show();
+                }
+
             }
             if(resultCode == RESULT_CANCELLED){
 
             }
+        }
+    }
+
+    private boolean isNumeric(String s) {
+        try {
+            Integer.parseInt(s);
+            return true;
+        }
+        catch (NumberFormatException e) {
+            return false;
         }
     }
 }

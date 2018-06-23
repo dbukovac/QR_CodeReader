@@ -3,7 +3,7 @@
     <string name="projectTextView"/>
     <string name="projectName">Naziv projekta: </string>
     <string name="partnerName">Naziv partnera: </string>
-    <string name="phasesButton">Faze</string>
+    <string name="phasesButton">Skeniraj</string>
     <string name="phaseName">Naziv faze:</string>
     <string name="confirmPhaseButton">Zaključaj fazu</string>
 </resources>
