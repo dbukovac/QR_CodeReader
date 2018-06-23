@@ -1,9 +1,16 @@
 <resources>
     <string name="app_name">WoodYou Mobile</string>
-    <string name="projectTextView"/>
-    <string name="projectName">Naziv projekta: </string>
+    <string name="confirmPhaseButton">Zaključaj fazu</string>
+    <string name="error">Greška!</string>
+    <string name="lockPhase">Želite li zaključati fazu projekta? (Ovo se ne može poništiti!)</string>
+    <string name="negativeButton">Odustani</string>
+    <string name="nonValidPhase">Ne postoji skenirana faza na odabranom projektu!</string>
+    <string name="nonValidQRCode">Nevažeći QR kod!</string>
     <string name="partnerName">Naziv partnera: </string>
     <string name="phasesButton">Skeniraj</string>
     <string name="phaseName">Naziv faze:</string>
-    <string name="confirmPhaseButton">Zaključaj fazu</string>
+    <string name="positiveButton">OK</string>
+    <string name="projectTextView"/>
+    <string name="projectName">Naziv projekta: </string>
+    <string name="warning">Upozorenje!</string>
 </resources>

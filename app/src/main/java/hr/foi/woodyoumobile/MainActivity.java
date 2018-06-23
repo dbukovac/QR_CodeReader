@@ -2,26 +2,20 @@ package hr.foi.woodyoumobile;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Parcelable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 import static android.telephony.MbmsDownloadSession.RESULT_CANCELLED;
@@ -121,9 +115,9 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else {
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this)
-                            .setTitle("Greška!")
-                            .setMessage("Nevažeći QR kod!")
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            .setTitle(getResources().getString(R.string.error))
+                            .setMessage(getResources().getString(R.string.nonValidQRCode))
+                            .setPositiveButton(getResources().getString(R.string.positiveButton), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     dialogInterface.cancel();

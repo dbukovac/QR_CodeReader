@@ -72,9 +72,9 @@ public class DisplayPhaseActivity extends AppCompatActivity {
             }
             else {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DisplayPhaseActivity.this)
-                        .setTitle("Greška!")
-                        .setMessage("Ne postoji skenirana faza na odabranom projektu: ")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        .setTitle(getResources().getString(R.string.error))
+                        .setMessage(getResources().getString(R.string.nonValidPhase))
+                        .setPositiveButton(getResources().getString(R.string.positiveButton), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 finish();
@@ -88,9 +88,9 @@ public class DisplayPhaseActivity extends AppCompatActivity {
     public void closePhaseButtonClick(View view) {
         if(phaseProjectId != -1) {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DisplayPhaseActivity.this)
-                    .setTitle("Upozorenje!")
-                    .setMessage("Želite li zaključati fazu projekta? (Ovo se ne može poništiti!)")
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    .setTitle(getResources().getString(R.string.warning))
+                    .setMessage(getResources().getString(R.string.lockPhase))
+                    .setPositiveButton(getResources().getString(R.string.positiveButton), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             Thread thread = new Thread(new Runnable() {
@@ -105,7 +105,7 @@ public class DisplayPhaseActivity extends AppCompatActivity {
                             finish();
                         }
                     })
-                    .setNegativeButton("Odustani", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(getResources().getString(R.string.negativeButton), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.cancel();
