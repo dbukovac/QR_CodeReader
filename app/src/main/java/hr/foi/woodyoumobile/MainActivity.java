@@ -20,10 +20,19 @@ import java.util.ArrayList;
 
 import static android.telephony.MbmsDownloadSession.RESULT_CANCELLED;
 
+/**
+ * Klasa glavne aktivnosti koja se pokreće prilikom otvaranja
+ * aplikacije. Služi za ispis i odabir projekata.
+ */
 public class MainActivity extends AppCompatActivity {
 
     public Integer projectId = -1;
 
+    /**
+     * Metoda koja se poziva kada se kreira glavna aktivnost.
+     * Pokreće se AsyncTask za dohvaćanje projektata
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,8 +46,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Ugniježđena klasa koja služi za dohvaćanje podataka o aktivnim i nezavršenim
+     * projektima. Naslijeđuje klasu AsyncTask.
+     */
     class GetProjectsTask extends AsyncTask<Void, Void, ArrayList<Project>>
     {
+        /**
+         * Metoda koja dohvaća projekte aktivne i nezavršene projekte,
+         * te kreira objekte tipa Project i dodaje ih u listu projekata.
+         *
+         * @param voids
+         * @return          Lista objekata tipa Project.
+         */
         @Override
         protected ArrayList<Project> doInBackground(Void ... voids)
         {
@@ -70,6 +90,14 @@ public class MainActivity extends AppCompatActivity {
             return projects;
         }
 
+        /**
+         * Metoda koja se izvršava nakon pokretanja AsyncTask-a.
+         * Služi za kreiranje i prikaz View-a za prikaz projekata,
+         * te postavlja metodu koja se poziva na klik tipke phasesButton
+         * (otvara aplikaciju za skeniranje QR koda)
+         *
+         * @param projects          Lista objekata tipa Project
+         */
         @Override
         protected void onPostExecute(ArrayList<Project> projects)
         {
@@ -100,6 +128,15 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    /**
+     * Metoda koja provjerava rezultat skeniranja QR koda.
+     * Ispisuje poruku pogreške ukoliko QR kod ne sadrži potrebne podatke.
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -133,6 +170,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Metoda koja provjerava može li se String pretvoriti u Integer
+     *
+     * @param s         String koji se provjerava
+     * @return          True ako se može pretvoriti,
+     *                  False ako ne može.
+     */
     private boolean isNumeric(String s) {
         try {
             Integer.parseInt(s);

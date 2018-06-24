@@ -16,12 +16,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * Klasa aktivnosti za prikazivanje podataka o fazi projekta i
+ * zatvaranje faze na projektu.
+ */
 public class DisplayPhaseActivity extends AppCompatActivity {
 
     private TextView phaseNameTextView;
     private TextView projectNameTextView;
     private Integer phaseProjectId = -1;
 
+    /**
+     * Metoda koja se poziva prilikom kreiranja aktivnosti.
+     * Inicijaliziraju se potrebni UI elementi, te se
+     * dohvaćaju parametri porslijeđeni iz glavne aktivnosti.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +46,20 @@ public class DisplayPhaseActivity extends AppCompatActivity {
         new GetPhaseTask().execute(projectId, phaseId);
     }
 
+    /**
+     * Ugniježđena klasa koja naslijeđuje AsyncTask klasu.
+     * Služi za dohvaćanje podataka o fazi u drugoj dretvi kako se ne bi
+     * blokirala glavna dretva.
+     */
     class GetPhaseTask extends AsyncTask<Integer, Void, Phase> {
+        /**
+         * Metoda kojom se dohvaćaju podaci o fazi projekta iz baze podataka.
+         * Ukoliko postoji više istih faza na projektu, uzima se prva dohvaćena faza.
+         *
+         * @param integers      Polje Integer-a, prvi i drugi element polja
+         *                      su ID projekta i ID faze
+         * @return              Objekt tipa Phase
+         */
         @Override
         protected Phase doInBackground(Integer ... integers) {
             DbConnection.getInstance().openConnection();
@@ -64,6 +87,15 @@ public class DisplayPhaseActivity extends AppCompatActivity {
             return phase;
         }
 
+        /**
+         * Metoda koja se pokreće nakon pokretanja AsyncTaska,
+         * služi za ažuriranje UI elemenata na aktivnosti, odnosno
+         * prikaz poruke greške.
+         *
+         * @param phase     Objekt tipa Phase, ako nije null, ispisju se
+         *                  podaci o objektu,a ako je null ispisuje se poruka
+         *                  greška.
+         */
         @Override
         protected void onPostExecute(final Phase phase) {
             if(phase != null) {
@@ -85,6 +117,13 @@ public class DisplayPhaseActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Metoda koja služi za zatvaranje faze na projektu, poziva se na
+     * pritisak tipke "closePhaseButton". Ispisuje poruku upozorenja,
+     * i ako se odgovori potvrdno, zatvara se faza na projektu, te se
+     * vraća na početnu aktivnost
+     * @param view      View iz kojeg se pozvala metoda.
+     */
     public void closePhaseButtonClick(View view) {
         if(phaseProjectId != -1) {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DisplayPhaseActivity.this)
