@@ -1,10 +1,12 @@
 package hr.foi.woodyoumobile;
 
 
+import java.io.Serializable;
+
 /**
  * Klasa koja služi za spremanje podataka o projektu
  */
-public class Project {
+public class Project implements Serializable{
 
     private int projectId;
     private String name;

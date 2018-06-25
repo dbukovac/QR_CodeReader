@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ import static android.telephony.MbmsDownloadSession.RESULT_CANCELLED;
  */
 public class MainActivity extends AppCompatActivity {
 
-    public Integer projectId = -1;
+    private Project selectedProject = null;
 
     /**
      * Metoda koja se poziva kada se kreira glavna aktivnost.
@@ -46,11 +47,22 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            new GetProjectsTask().execute();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Ugniježđena klasa koja služi za dohvaćanje podataka o aktivnim i nezavršenim
      * projektima. Naslijeđuje klasu AsyncTask.
      */
-    class GetProjectsTask extends AsyncTask<Void, Void, ArrayList<Project>>
+    private class GetProjectsTask extends AsyncTask<Void, Void, ArrayList<Project>>
     {
         /**
          * Metoda koja dohvaća projekte aktivne i nezavršene projekte,
@@ -102,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(ArrayList<Project> projects)
         {
             LinearLayout linearLayout = findViewById(R.id.projectLinearLayout);
+            linearLayout.removeAllViews();
             for(final Project project: projects) {
                 View projectsView = LayoutInflater.from(MainActivity.this).inflate(R.layout.project_view, null);
                 TextView projectTextView = projectsView.findViewById(R.id.projectTextView);
@@ -113,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View view) {
                         try {
-                            projectId = project.getProjectId();
+                            selectedProject = project;
                             Intent intent = new Intent("com.google.zxing.client.android.SCAN");
                             intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
                             startActivityForResult(intent, 0);
@@ -147,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.w("QR_CODE", result);
                     Intent intent = new Intent(MainActivity.this, DisplayPhaseActivity.class);
                     intent.putExtra("PHASE_ID", result);
-                    intent.putExtra("PROJECT_ID", projectId.toString());
+                    intent.putExtra("PROJECT", selectedProject);
                     startActivity(intent);
                 }
                 else {

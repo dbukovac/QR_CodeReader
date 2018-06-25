@@ -25,6 +25,7 @@ public class DisplayPhaseActivity extends AppCompatActivity {
     private TextView phaseNameTextView;
     private TextView projectNameTextView;
     private Integer phaseProjectId = -1;
+    private Phase phase;
 
     /**
      * Metoda koja se poziva prilikom kreiranja aktivnosti.
@@ -40,10 +41,10 @@ public class DisplayPhaseActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         Integer phaseId = Integer.parseInt(extras.getString("PHASE_ID"));
-        Integer projectId = Integer.parseInt(extras.getString("PROJECT_ID"));
+        Project project = (Project) extras.getSerializable("PROJECT");
         phaseNameTextView = findViewById(R.id.phaseNameTextView);
         projectNameTextView = findViewById(R.id.projectNameTextView);
-        new GetPhaseTask().execute(projectId, phaseId);
+        new GetPhaseTask().execute(project, phaseId);
     }
 
     /**
@@ -51,30 +52,30 @@ public class DisplayPhaseActivity extends AppCompatActivity {
      * Služi za dohvaćanje podataka o fazi u drugoj dretvi kako se ne bi
      * blokirala glavna dretva.
      */
-    class GetPhaseTask extends AsyncTask<Integer, Void, Phase> {
+    private class GetPhaseTask extends AsyncTask<Object, Void, Phase> {
         /**
          * Metoda kojom se dohvaćaju podaci o fazi projekta iz baze podataka.
          * Ukoliko postoji više istih faza na projektu, uzima se prva dohvaćena faza.
          *
-         * @param integers      Polje Integer-a, prvi i drugi element polja
-         *                      su ID projekta i ID faze
+         * @param objects      Polje objekata prvi i drugi element polja
+         *                      su objekt tipa Projekt i ID faze tipa Integer
          * @return              Objekt tipa Phase
          */
         @Override
-        protected Phase doInBackground(Integer ... integers) {
+        protected Phase doInBackground(Object ... objects) {
             DbConnection.getInstance().openConnection();
 
-            Phase phase = null;
+            Project project = (Project) objects[0];
+            Integer phaseId = (Integer) objects[1];
 
             try {
-                ResultSet resultSet = DbConnection.getInstance().executeQuery("SELECT * FROM Faze_projektaView WHERE (projektId = "+integers[0]+") AND (fazaId = "+integers[1]+");");
+                ResultSet resultSet = DbConnection.getInstance().executeQuery("SELECT * FROM Faze_projektaView WHERE (projektId = "+project.getProjectId()+") AND (fazaId = "+phaseId+");");
 
                 if (resultSet.next()) {
                     phase = new Phase();
                     phase.setPhaseProjectId(resultSet.getInt("id"));
                     phaseProjectId = resultSet.getInt("id");
-                    phase.setProjectId(resultSet.getInt("projektId"));
-                    phase.setProjectName(resultSet.getString("nazivProjekta"));
+                    phase.setProject(project);
                     phase.setName(resultSet.getString("naziv"));
                     phase.setPhaseId(resultSet.getInt("fazaId"));
                 }
@@ -99,7 +100,7 @@ public class DisplayPhaseActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(final Phase phase) {
             if(phase != null) {
-                projectNameTextView.append(" "+phase.getProjectName());
+                projectNameTextView.append(" "+phase.getProject().getName());
                 phaseNameTextView.append(" "+phase.getName());
             }
             else {
@@ -125,7 +126,7 @@ public class DisplayPhaseActivity extends AppCompatActivity {
      * @param view      View iz kojeg se pozvala metoda.
      */
     public void closePhaseButtonClick(View view) {
-        if(phaseProjectId != -1) {
+        if(phase.getPhaseProjectId() != -1) {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DisplayPhaseActivity.this)
                     .setTitle(getResources().getString(R.string.warning))
                     .setMessage(getResources().getString(R.string.lockPhase))
@@ -136,7 +137,7 @@ public class DisplayPhaseActivity extends AppCompatActivity {
                                 @Override
                                 public void run() {
                                     DbConnection.getInstance().openConnection();
-                                    DbConnection.getInstance().executeUpdate("UPDATE Faze_projekta SET zakljucano = 1 WHERE id = "+phaseProjectId+";");
+                                    DbConnection.getInstance().executeUpdate("UPDATE Faze_projekta SET zakljucano = 1 WHERE id = "+phase.getPhaseProjectId()+";");
                                     DbConnection.getInstance().closeConnection();
                                 }
                             });

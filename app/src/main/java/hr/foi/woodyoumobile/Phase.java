@@ -1,14 +1,17 @@
 package hr.foi.woodyoumobile;
 
+import java.io.Serializable;
+
 /**
  * Klasa koja služi za spremanje podataka o fazi
  */
-class Phase {
+public class Phase implements Serializable{
     private int projectId = -1;
     private String name = null;
     private String projectName = null;
     private int phaseId = -1;
     private int phaseProjectId = -1;
+    private Project project = null;
 
     public Phase() {
     }
@@ -95,5 +98,13 @@ class Phase {
      */
     public String getProjectName() {
         return projectName;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
+
+    public Project getProject() {
+        return project;
     }
 }
